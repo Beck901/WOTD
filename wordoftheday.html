@@ -11,8 +11,8 @@
   <p>Check the browser's console for the raw output of the RSS feed.</p>
 
   <script>
-    // Fetch the RSS feed from Wordsmith.org
-    fetch('https://wordsmith.org/awad/rss1.xml')
+    // Use the Merriam-Webster RSS feed
+    fetch('https://www.merriam-webster.com/wotd/feed/rss2')
       .then(response => response.text())  // Get the raw text of the feed
       .then(xml => {
         // Log the raw XML content of the RSS feed
