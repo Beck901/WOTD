@@ -52,32 +52,33 @@
     <p><a href="#" id="link" target="_blank">Learn more</a></p>
   </div>
 
-  // Use CORS proxy to bypass CORS restrictions
-fetch('https://cors-anywhere.herokuapp.com/https://wordsmith.org/awad/rss.xml')
-  .then(response => response.text())
-  .then(xml => {
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xml, "text/xml");
-
-    // Extract the first item from the RSS feed
-    const item = xmlDoc.getElementsByTagName("item")[0];
-
-    // Extract the word, definition, and link
-    const word = item.getElementsByTagName("title")[0].textContent;
-    const definition = item.getElementsByTagName("description")[0].textContent;
-    const link = item.getElementsByTagName("link")[0].textContent;
-
-    // Insert the word, definition, and link into the HTML
-    document.getElementById('word').textContent = word;
-    document.getElementById('definition').textContent = definition;
-    document.getElementById('link').href = link;
-  })
-  .catch(err => {
-    console.error('Error fetching RSS feed:', err);
-    document.getElementById('word').textContent = "Error fetching the word";
-    document.getElementById('definition').textContent = "Sorry, we couldn't fetch the Word of the Day right now.";
-  });
+  <script>
+    // Fetch the RSS feed from Wordsmith.org
+    fetch('https://wordsmith.org/awad/rss.xml')
+      .then(response => response.text())
+      .then(xml => {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xml, "text/xml");
+        
+        // Extract the first item from the RSS feed
+        const item = xmlDoc.getElementsByTagName("item")[0];
+        
+        // Extract the word, definition, and link
+        const word = item.getElementsByTagName("title")[0].textContent;
+        const definition = item.getElementsByTagName("description")[0].textContent;
+        const link = item.getElementsByTagName("link")[0].textContent;
+        
+        // Insert the word, definition, and link into the HTML
+        document.getElementById('word').textContent = word;
+        document.getElementById('definition').textContent = definition;
+        document.getElementById('link').href = link;
+      })
+      .catch(err => {
+        console.error('Error fetching RSS feed:', err);
+        document.getElementById('word').textContent = "Error fetching the word";
+        document.getElementById('definition').textContent = "Sorry, we couldn't fetch the Word of the Day right now.";
+      });
+  </script>
 
 </body>
 </html>
-
