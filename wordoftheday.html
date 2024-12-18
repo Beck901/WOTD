@@ -3,24 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Word of the Day - Raw RSS Feed</title>
+  <title>Word of the Day - Wordsmith.org</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    header {
+      background-color: #2a3d66;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+    }
+    .container {
+      padding: 20px;
+      text-align: center;
+    }
+    h2 {
+      color: #2a3d66;
+    }
+    .word {
+      font-size: 2em;
+      font-weight: bold;
+      color: #3a5b8c;
+    }
+    .definition {
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+    .link {
+      margin-top: 20px;
+      font-size: 1em;
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .link:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
 
-  <h1>Word of the Day</h1>
-  <p>Check the browser's console for the raw output of the RSS feed.</p>
+  <header>
+    <h1>Word of the Day</h1>
+  </header>
+
+  <div class="container">
+    <h2>Today's Word</h2>
+    <div id="word" class="word"></div>
+    <div id="definition" class="definition"></div>
+    <a id="link" class="link" href="" target="_blank">Learn more</a>
+  </div>
 
   <script>
     // Use the CORS proxy to bypass the CORS issue for Wordsmith.org
     fetch('https://cors-anywhere.herokuapp.com/https://wordsmith.org/awad/rss1.xml')
       .then(response => response.text())  // Get the raw text of the feed
       .then(xml => {
-        // Log the raw XML content of the RSS feed
-        console.log('Raw RSS Feed:', xml);
+        // Parse the raw XML
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xml, "application/xml");
+
+        // Extract the first item (Word of the Day)
+        const item = xmlDoc.getElementsByTagName("item")[0];
+
+        // Extract the word, definition, and link
+        const word = item.getElementsByTagName("title")[0].textContent;
+        const definition = item.getElementsByTagName("description")[0].textContent;
+        const link = item.getElementsByTagName("link")[0].textContent;
+
+        // Insert the word, definition, and link into the HTML
+        document.getElementById('word').textContent = word;
+        document.getElementById('definition').textContent = definition;
+        document.getElementById('link').href = link;
       })
       .catch(err => {
         // Handle any errors
-        console.error('Error fetching the RSS feed:', err);
+        console.error('Error fetching or parsing the RSS feed:', err);
+        document.getElementById('word').textContent = "Error fetching the word";
+        document.getElementById('definition').textContent = "Sorry, we couldn't fetch the Word of the Day right now.";
       });
   </script>
 
