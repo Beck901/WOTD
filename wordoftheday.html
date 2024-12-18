@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-size: 36px;
+      margin-top: 20px;
+    }
+    h2 {
+      font-size: 28px;
+      color: #1a73e8;
+    }
+    p {
+      font-size: 18px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    a {
+      font-size: 16px;
+      color: #666;
+    }
+  </style>
+  <script>
+    // Fetch the RSS feed
+    fetch('https://wordsmith.org/awad/rss.xml')
+      .then(response => response.text())
+      .then(xml => {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xml, "text/xml");
+        const item = xmlDoc.getElementsByTagName("item")[0]; // Get the first item
+        const word = item.getElementsByTagName("title")[0].textContent;
+        const definition = item.getElementsByTagName("description")[0].textContent;
+        const link = item.getElementsByTagName("link")[0].textContent;
+
+        // Insert the word and definition into the page
+        document.getElementById('word').textContent = word;
+        document.getElementById('definition').textContent = definition;
+        document.getElementById('link').href = link;
+      })
+      .catch(err => console.log('Error fetching RSS feed:', err));
+  </script>
+</head>
+<body>
+  <h1>Word of the Day</h1>
+  <h2 id="word"></h2>
+  <p id="definition"></p>
+  <p><a href="#" id="link" target="_blank">Learn more</a></p>
+</body>
+</html>
