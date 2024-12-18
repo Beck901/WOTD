@@ -3,55 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word of the Day</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       margin: 0;
       padding: 0;
+      background-color: #f4f4f9;
     }
     h1 {
       font-size: 36px;
       margin-top: 20px;
+      color: #333;
     }
     h2 {
       font-size: 28px;
       color: #1a73e8;
+      margin-top: 10px;
     }
     p {
       font-size: 18px;
-      max-width: 400px;
+      max-width: 500px;
       margin: 0 auto;
+      color: #555;
     }
     a {
       font-size: 16px;
-      color: #666;
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
     }
   </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Word of the Day</h1>
+    <h2 id="word">Loading...</h2>
+    <p id="definition">Please wait while we fetch the word...</p>
+    <p><a href="#" id="link" target="_blank">Learn more</a></p>
+  </div>
+
   <script>
-    // Fetch the RSS feed
+    // Fetch the RSS feed from Wordsmith.org
     fetch('https://wordsmith.org/awad/rss.xml')
       .then(response => response.text())
       .then(xml => {
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xml, "text/xml");
-        const item = xmlDoc.getElementsByTagName("item")[0]; // Get the first item
+        
+        // Extract the first item from the RSS feed
+        const item = xmlDoc.getElementsByTagName("item")[0];
+        
+        // Extract the word, definition, and link
         const word = item.getElementsByTagName("title")[0].textContent;
         const definition = item.getElementsByTagName("description")[0].textContent;
         const link = item.getElementsByTagName("link")[0].textContent;
-
-        // Insert the word and definition into the page
+        
+        // Insert the word, definition, and link into the HTML
         document.getElementById('word').textContent = word;
         document.getElementById('definition').textContent = definition;
         document.getElementById('link').href = link;
       })
-      .catch(err => console.log('Error fetching RSS feed:', err));
+      .catch(err => {
+        console.error('Error fetching RSS feed:', err);
+        document.getElementById('word').textContent = "Error fetching the word";
+        document.getElementById('definition').textContent = "Sorry, we couldn't fetch the Word of the Day right now.";
+      });
   </script>
-</head>
-<body>
-  <h1>Word of the Day</h1>
-  <h2 id="word"></h2>
-  <p id="definition"></p>
-  <p><a href="#" id="link" target="_blank">Learn more</a></p>
+
 </body>
 </html>
+
