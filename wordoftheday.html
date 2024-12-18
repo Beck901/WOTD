@@ -11,8 +11,8 @@
   <p>Check the browser's console for the raw output of the RSS feed.</p>
 
   <script>
-    // Use the Merriam-Webster RSS feed
-    fetch('https://www.merriam-webster.com/wotd/feed/rss2')
+    // Use the CORS proxy to bypass the CORS issue for Wordsmith.org
+    fetch('https://cors-anywhere.herokuapp.com/https://wordsmith.org/awad/rss1.xml')
       .then(response => response.text())  // Get the raw text of the feed
       .then(xml => {
         // Log the raw XML content of the RSS feed
