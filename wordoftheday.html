@@ -3,66 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Word of the Day</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f9;
-    }
-    h1 {
-      font-size: 36px;
-      margin-top: 20px;
-      color: #333;
-    }
-    h2 {
-      font-size: 28px;
-      color: #1a73e8;
-      margin-top: 10px;
-    }
-    p {
-      font-size: 18px;
-      max-width: 500px;
-      margin: 0 auto;
-      color: #555;
-    }
-    a {
-      font-size: 16px;
-      color: #1a73e8;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-  </style>
+  <title>Word of the Day - Raw RSS Feed</title>
 </head>
 <body>
 
-  <div class="container">
-    <h1>Word of the Day</h1>
-    <h2 id="word">Loading...</h2>
-    <p id="definition">Please wait while we fetch the word...</p>
-    <p><a href="#" id="link" target="_blank">Learn more</a></p>
-  </div>
+  <h1>Word of the Day</h1>
+  <p>Check the browser's console for the raw output of the RSS feed.</p>
 
   <script>
     // Fetch the RSS feed from Wordsmith.org
     fetch('https://wordsmith.org/awad/rss.xml')
-  .then(response => response.text())
-  .then(xml => {
-    console.log('Fetched XML:', xml);
-  })
-  .catch(err => {
-    console.error('Error fetching RSS feed:', err);
-  });
-
+      .then(response => response.text())  // Get the raw text of the feed
+      .then(xml => {
+        // Log the raw XML content of the RSS feed
+        console.log('Raw RSS Feed:', xml);
+      })
+      .catch(err => {
+        // Handle any errors
+        console.error('Error fetching the RSS feed:', err);
+      });
   </script>
 
 </body>
