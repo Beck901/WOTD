@@ -46,19 +46,41 @@
   </div>
 
   <script>
-    // Fetch the Word of the Day RSS feed (using the proxy or direct URL)
-    fetch('https://beck901.github.io/WOTD/wordoftheday.json')  // Update this URL if needed
-      .then(response => response.json())  // Parse the response as JSON
-      .then(data => {
-        // Format the data into JSON string for display
-        const jsonData = JSON.stringify(data, null, 2); // The `null, 2` creates nice formatting with indentation
-        
-        // Insert the formatted JSON into the <pre> tag
+    // The RSS feed URL from Wordsmith.org
+    const rssFeedUrl = 'https://wordsmith.org/awad/rss1.xml';
+
+    // Fetch the RSS feed
+    fetch(rssFeedUrl)
+      .then(response => response.text())  // Get the response as text (XML)
+      .then(xml => {
+        // Parse the XML data using DOMParser
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xml, "text/xml");
+
+        // Extract the first <item> element from the RSS feed
+        const item = xmlDoc.getElementsByTagName("item")[0];
+
+        // Extract the word, definition, and link from the RSS <item>
+        const word = item.getElementsByTagName("title")[0].textContent;
+        const definition = item.getElementsByTagName("description")[0].textContent;
+        const link = item.getElementsByTagName("link")[0].textContent;
+
+        // Create a JSON object from the extracted data
+        const wordData = {
+          word: word,
+          definition: definition,
+          link: link
+        };
+
+        // Convert the wordData object to a pretty-printed JSON string
+        const jsonData = JSON.stringify(wordData, null, 2);
+
+        // Insert the JSON into the <pre> tag to display it as raw JSON
         document.getElementById('json-output').textContent = jsonData;
       })
       .catch(err => {
-        // Handle errors
-        console.error('Error fetching or parsing the JSON:', err);
+        // Log and display error if the fetch or parsing fails
+        console.error('Error fetching or parsing the RSS feed:', err);
         document.getElementById('json-output').textContent = '{"error": "Failed to load data"}';
       });
   </script>
