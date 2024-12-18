@@ -59,33 +59,59 @@
   </div>
 
   <script>
-    // Use the CORS proxy to bypass the CORS issue for Wordsmith.org
-    fetch('https://cors-anywhere.herokuapp.com/https://wordsmith.org/awad/rss1.xml')
-      .then(response => response.text())  // Get the raw text of the feed
-      .then(xml => {
-        // Parse the raw XML
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xml, "application/xml");
+    // Function to fetch the RSS feed and display the word of the day
+    function fetchWordOfTheDay() {
+      fetch('https://cors-anywhere.herokuapp.com/https://wordsmith.org/awad/rss1.xml')
+        .then(response => response.text())  // Get the raw text of the feed
+        .then(xml => {
+          // Parse the raw XML
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(xml, "application/xml");
 
-        // Extract the first item (Word of the Day)
-        const item = xmlDoc.getElementsByTagName("item")[0];
+          // Extract the first item (Word of the Day)
+          const item = xmlDoc.getElementsByTagName("item")[0];
 
-        // Extract the word, definition, and link
-        const word = item.getElementsByTagName("title")[0].textContent;
-        const definition = item.getElementsByTagName("description")[0].textContent;
-        const link = item.getElementsByTagName("link")[0].textContent;
+          // Extract the word, definition, and link
+          const word = item.getElementsByTagName("title")[0].textContent;
+          const definition = item.getElementsByTagName("description")[0].textContent;
+          const link = item.getElementsByTagName("link")[0].textContent;
 
-        // Insert the word, definition, and link into the HTML
-        document.getElementById('word').textContent = word;
-        document.getElementById('definition').textContent = definition;
-        document.getElementById('link').href = link;
-      })
-      .catch(err => {
-        // Handle any errors
-        console.error('Error fetching or parsing the RSS feed:', err);
-        document.getElementById('word').textContent = "Error fetching the word";
-        document.getElementById('definition').textContent = "Sorry, we couldn't fetch the Word of the Day right now.";
+          // Insert the word, definition, and link into the HTML
+          document.getElementById('word').textContent = word;
+          document.getElementById('definition').textContent = definition;
+          document.getElementById('link').href = link;
+
+          // Return the JSON data
+          return {
+            word: word,
+            definition: definition,
+            link: link
+          };
+        })
+        .catch(err => {
+          // Handle any errors
+          console.error('Error fetching or parsing the RSS feed:', err);
+          document.getElementById('word').textContent = "Error fetching the word";
+          document.getElementById('definition').textContent = "Sorry, we couldn't fetch the Word of the Day right now.";
+        });
+    }
+
+    // This function simulates serving JSON data to the client
+    window.addEventListener("load", () => {
+      fetchWordOfTheDay();  // Fetch and display the word of the day
+    });
+  </script>
+
+  <script>
+    // Create a simple static endpoint to serve JSON (for DAKboard)
+    if (window.location.pathname === "/WOTD/json") {
+      // Return JSON data
+      fetchWordOfTheDay().then(data => {
+        // Serve as JSON response (simulated as a browser download)
+        const jsonResponse = JSON.stringify(data);
+        document.body.innerHTML = `<pre>${jsonResponse}</pre>`; // For testing, show the raw JSON
       });
+    }
   </script>
 
 </body>
